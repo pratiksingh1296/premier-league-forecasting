@@ -107,7 +107,7 @@ Accuracy is reported for completeness, but model selection is driven primarily b
 | Model                  | Accuracy | Log Loss | Draw Recall |
 |------------------------|----------|----------|-------------|
 | Baseline (Always Home) | 0.41     | 21.34    | 0.00        |
-| Logistic Regression    | 0.49     | 1.01     | Low         |
+| Logistic Regression    | 0.49     | 1.01     | 0.0        |
 | XGBoost                | 0.47     | 1.04     | 0.19        |
 | **XGBoost (Calibrated)** | **0.48** | **1.02** | **Improved** |
 
@@ -244,3 +244,4 @@ pip install -r requirements.txt
 2. Run training pipeline
 
 python src/train.py
+
