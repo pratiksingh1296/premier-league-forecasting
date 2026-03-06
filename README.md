@@ -49,16 +49,22 @@ F --> G[League Outcome Probabilities]
 
 The dataset used in this project is included in the repository under `data/raw/`.
 
-Dataset contains historical match outcomes including:
+Dataset size:
+- ~380 matches per season
+- Multiple seasons of historical match results
+
+### Raw Match Data
+The raw dataset contains match-level outcomes including:
 - Home team
 - Away team
 - Goals scored
 - Match outcome (Home / Draw / Away)
 
-**Features**
+### Engineered Features
+Additional modeling features are generated during feature engineering, including:
 - Home & away team form (rolling windows)
-- Goals scored / conceded
-- Goal differences
+- Goals scored / conceded trends
+- Goal difference statistics
 - Points-per-game differentials
 - Match-level contextual features
 
@@ -106,10 +112,10 @@ Accuracy is reported for completeness, but model selection is driven primarily b
 
 | Model                  | Accuracy | Log Loss | Draw Recall |
 |------------------------|----------|----------|-------------|
-| Baseline (Always Home) | 0.41     | 21.34    | 0.00        |
+| Baseline (Always Home) | 0.41     | 21.34    | 0.0        |
 | Logistic Regression    | 0.49     | 1.01     | 0.0        |
 | XGBoost                | 0.47     | 1.04     | 0.19        |
-| **XGBoost (Calibrated)** | **0.48** | **1.02** | **Improved** |
+| **XGBoost (Calibrated)** | **0.48** | **1.02** | **0.09** |
 
 ---
 
@@ -244,4 +250,5 @@ pip install -r requirements.txt
 2. Run training pipeline
 
 python src/train.py
+
 
