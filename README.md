@@ -18,14 +18,54 @@ This project addresses that gap by:
 
 ---
 
+## Tech Stack
+
+- Python
+- Pandas
+- NumPy
+- Scikit-learn
+- XGBoost
+- Matplotlib / Seaborn
+- Streamlit
+
+---
+
+## Modeling Pipeline
+
+```mermaid
+graph TD
+A[Historical Match Data] --> B[Feature Engineering]
+B --> C[Logistic Regression & XGBoost Models]
+C --> D[Probability Calibration]
+D --> E[Expected Points Calculation]
+E --> F[Monte Carlo Season Simulation]
+F --> G[League Outcome Probabilities]
+```
+
+---
+
 ## Data
 
 **Source:** Historical Premier League match data (Kaggle)
 
-**Features**
+The dataset used in this project is included in the repository under `data/raw/`.
+
+Dataset size:
+- ~380 matches per season
+- Multiple seasons of historical match results
+
+### Raw Match Data
+The raw dataset contains match-level outcomes including:
+- Home team
+- Away team
+- Goals scored
+- Match outcome (Home / Draw / Away)
+
+### Engineered Features
+Additional modeling features are generated during feature engineering, including:
 - Home & away team form (rolling windows)
-- Goals scored / conceded
-- Goal differences
+- Goals scored / conceded trends
+- Goal difference statistics
 - Points-per-game differentials
 - Match-level contextual features
 
@@ -73,10 +113,20 @@ Accuracy is reported for completeness, but model selection is driven primarily b
 
 | Model                  | Accuracy | Log Loss | Draw Recall |
 |------------------------|----------|----------|-------------|
-| Baseline (Always Home) | 0.41     | 21.34    | 0.00        |
-| Logistic Regression    | 0.49     | 1.01     | Low         |
+| Baseline (Always Home) | 0.41     | 21.34    | 0.0        |
+| Logistic Regression    | 0.49     | 1.01     | 0.0        |
 | XGBoost                | 0.47     | 1.04     | 0.19        |
-| **XGBoost (Calibrated)** | **0.48** | **1.02** | **Improved** |
+| **XGBoost (Calibrated)** | **0.48** | **1.02** | **0.09** |
+
+---
+
+## Key Results
+
+### Draw Calibration Comparison
+![Calibration](reports/figures/reliability_curve_draws_comparison.png)
+
+### Expected vs Actual Points
+![xPts](reports/figures/xpts_vs_actual_scatter.png)
 
 ---
 
@@ -114,7 +164,7 @@ See 02_pl_summary.ipynb for:
 - Big-6 confidence intervals
 - Monte Carlo outcome probabilities
 
-All figures are stored in:
+All figures are stored in `reports/figures/`.
 
 ---
 
@@ -122,41 +172,47 @@ All figures are stored in:
 
 ```
 premier-league-ml/
-├── data/
-│   ├── raw/
-│   │   ├── PremierLeague.csv
-│   └── processed/
-│       ├── features_v1.csv
-│       ├── league_table_expected_vs_actual.csv
-|       ├── league_table_monte_carlo_comparison.csv
-|       ├── match_probabilities_xgb_calibrated.csv
-|       ├── monte_carlo_season_simulations.csv
-|       ├── monte_carlo_season_summary.csv
-|       └── PL_processed.csv
 │
-├── notebooks/
+├── data/
+│   ├── raw/                         # Original immutable data
+│   │   └── PremierLeague.csv
+│   └── processed/                   # Cleaned / feature-engineered data
+│       ├── PL_processed.csv
+│       └── features_v1.csv
+│
+├── notebooks/                       # Exploration and analysis
 │   ├── 01_data_sanity.ipynb
 │   └── 02_pl_summary.ipynb
 │
-├── reports/
-│   ├── figures/
-│   |   ├── big_6_season_points_ci.png
-│   |   ├── big_6_season_points_histograms.png
-│   |   ├── reliability_curve_draws_comparison.png
-│   |   └── xpts_vs_actual_scatter.png
-│   └── plots/
-│       └── xpts_vs_actual_scatter.py
-|
-├── src/
+├── src/                             # Core project code
 │   ├── data_prep.py
 │   ├── features.py
 │   ├── train.py
 │   ├── evaluate.py
-|   ├── monte_carlo.py
+│   ├── monte_carlo.py
 │   └── league_table.py
+│
+├── reports/                         # Generated analysis outputs
+│   ├── figures/
+│   │   ├── big_6_season_points_ci.png
+│   │   ├── big_6_season_points_histograms.png
+│   │   ├── reliability_curve_draws_comparison.png
+│   │   └── xpts_vs_actual_scatter.png
+│   │
+│   ├── tables/
+│   │   ├── league_table_expected_vs_actual.csv
+│   │   ├── league_table_monte_carlo_comparison.csv
+│   │   ├── match_probabilities_xgb_calibrated.csv
+│   │   ├── monte_carlo_season_simulations.csv
+│   │   ├── monte_carlo_season_summary.csv
+│   │   └── model_metrics_summary.csv
+│   │
+│   └── plots/
+│       └── xpts_vs_actual_scatter.py
 │
 ├── requirements.txt
 └── README.md
+
 ```
 
 ---
@@ -188,6 +244,12 @@ This project is for educational and research purposes.
 ---
 
 ## Setup
-```bash
+1. Install dependencies
+
 pip install -r requirements.txt
-```
+
+2. Run training pipeline
+
+python src/train.py
+
+
